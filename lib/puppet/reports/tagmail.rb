@@ -240,6 +240,7 @@ Puppet::Reports.register_report(:tagmail) do
       Puppet.notice 'Not sending tagmail report; no changes'
       return
     end
+    Puppet.notice "Sending tagmail because logs_err.nil?=#{logs_err.nil?} out_of_sync=#{metrics['resources']['out_of_sync']} changed=#{metrics['resources']['changed']} audit.nil?=#{metrics['events']['audit'].nil?}"
 
     taglists = parse(File.read(tagmail_conf_file))
 
