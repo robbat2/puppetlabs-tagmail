@@ -59,7 +59,11 @@ Puppet::Reports.register_report(:tagmail) do
         true if neg.find { |tag| log.tagged?(tag) }
       end
 
-      if messages.empty?
+      # Check if the only message is the "Applied catalog", and do not spam in that case.
+      has_changes = !messages.empty?
+      has_changes = false if messages.length == 1 && messages[0].to_report =~ %r{Applied\ catalog\ in\ .*\ seconds}
+
+      if !has_changes
         Puppet.info "No messages to report to #{emails.join(',')}"
         next
       else
@@ -246,8 +250,7 @@ Puppet::Reports.register_report(:tagmail) do
 
     # Now find any appropriately tagged messages.
     reports = match(taglists)
-    reports.reject! { |item| item =~ %r{Applied\ catalog\ in\ .*\ seconds} }
-    reports.reject! { |item| item.strip.length == 0 }
+    # And send if there is work to do
     send(reports) unless reports.empty?
   end
 
