@@ -63,7 +63,7 @@ Puppet::Reports.register_report(:tagmail) do
       # - Requesting catalog from ...
       # - Applied catalog in ... seconds
       # And do not spam in that case.
-      count_changes = has_changes.length # returns 0..2 if we are going to not print, and larger numbers otherwise.
+      count_changes = messages.length # returns 0..2 if we are going to not print, and larger numbers otherwise.
       count_changes -= 1 if count_changes <= 5 && messages[-1].to_report =~ %r{Applied\ catalog\ in\ .*\ seconds}
       # Only present after https://github.com/puppetlabs/puppet/pull/9126
       count_changes -= 1 if count_changes <= 5 && messages[0].to-report =~ %r{Requesting\ catalog\ from\ [^[:space:]]+\ \([0-9a-f.:]+\)}
